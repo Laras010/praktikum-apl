@@ -24,45 +24,35 @@ void tampilMenu(){
     cout << "Pilih: ";
 }
 
-void tambahData(data_sewaBaju *baju, int *jumlah) {
-
-    try {
-        cout << "\n===== INPUT DATA =====" << endl;
+void tambahData(data_sewaBaju *baju, int *jumlah){
+    try{
+        cout << endl << "===== INPUT DATA =====" << endl;
 
         cout << "ID Baju   : ";
-        cout.flush(); 
         cin >> baju[*jumlah].id_baju;
 
         cout << "Nama Baju : ";
-        cout.flush();
         cin >> baju[*jumlah].nama_baju;
 
         cout << "Ukuran    : ";
-        cout.flush();
         cin >> baju[*jumlah].ukuran;
 
         cout << "Warna     : ";
-        cout.flush();
         cin >> baju[*jumlah].warna;
 
         cout << "Harga     : ";
-        cout.flush();
         cin >> baju[*jumlah].harga_sewa;
-
-        if(cin.fail()) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            throw "Harga harus angka";
-        }
+        if(cin.fail()) throw "Harga harus angka";
 
         cout << "Status    : ";
-        cout.flush();
         cin >> baju[*jumlah].status;
 
         (*jumlah)++;
-        cout << "Data berhasil ditambahkan!" << endl;
+        cout << endl << "Data berhasil ditambahkan!" << endl;
     }
-    catch(const char* err) {
+    catch(const char* err){
+        cin.clear();
+        cin.ignore(1000, '\n');
         cout << "Error: " << err << endl;
     }
 }
@@ -77,97 +67,6 @@ void tampilkanData(data_sewaBaju *baju, int jumlah){
              << baju[i].warna << " | "
              << baju[i].harga_sewa << " | "
              << baju[i].status << endl;
-    }
-}
-
-int sequentialSearch(data_sewaBaju *baju, int jumlah, string nama){
-    for(int i = 0; i < jumlah; i++){
-        if(baju[i].nama_baju == nama){
-            return i;
-        }
-    }
-    return -1;
-}
-
-int binarySearch(data_sewaBaju *baju, int jumlah, string id){
-    int left = 0, right = jumlah - 1;
-    while(left <= right){
-        int mid = (left + right) / 2;
-        if(baju[mid].id_baju == id) return mid;
-        else if(id < baju[mid].id_baju) right = mid - 1;
-        else left = mid + 1;
-    }
-    return -1;
-}
-
-void sortingID(data_sewaBaju *baju, int jumlah){
-    for(int i = 0; i < jumlah-1; i++){
-        for(int j = i+1; j < jumlah; j++){
-            if(baju[i].id_baju > baju[j].id_baju){
-                swap(baju[i], baju[j]);
-            }
-        }
-    }
-    cout << "Data sudah diurutkan!" << endl;
-}
-
-void updateData(data_sewaBaju *baju, int jumlah, string id){
-    try{
-        for(int i = 0; i < jumlah; i++){
-            if(baju[i].id_baju == id){
-                cout << "Data ditemukan, input ulang:" << endl;
-
-                cout << "Nama Baju : ";
-                cin >> baju[i].nama_baju;
-
-                cout << "Ukuran    : ";
-                cin >> baju[i].ukuran;
-
-                cin.clear();
-                cin.ignore(1000, '\n');
-
-                cout << "Warna     : ";
-                cin >> baju[i].warna;
-
-                cout << "Harga     : ";
-                cin >> baju[i].harga_sewa;
-                if(cin.fail()) throw "Harga harus angka";
-
-                cin.clear();
-                cin.ignore(1000, '\n');
-
-                cout << "Status    : ";
-                cin >> baju[i].status;
-
-                cout << "Update berhasil!" << endl;
-                return;
-            }
-        }
-        throw "Data tidak ditemukan";
-    }
-    catch(const char* err){
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Error: " << err << endl;
-    }
-}
-
-void hapusData(data_sewaBaju *baju, int *jumlah, string id){
-    try{
-        for(int i = 0; i < *jumlah; i++){
-            if(baju[i].id_baju == id){
-                for(int j = i; j < *jumlah - 1; j++){
-                    baju[j] = baju[j+1];
-                }
-                (*jumlah)--;
-                cout << "Data berhasil dihapus!" << endl;
-                return;
-            }
-        }
-        throw "Data tidak ditemukan";
-    }
-    catch(const char* err){
-        cout << "Error: " << err << endl;
     }
 }
 
@@ -222,56 +121,6 @@ int main(){
             }
             else if(pilih == 2){
                 tampilkanData(baju, jumlah);
-            }
-            else if(pilih == 3){
-                int p;
-                cout << endl << "1. Cari ID" << endl;
-                cout << "2. Cari Nama" << endl;
-                cout << "Pilih: ";
-                cin >> p;
-
-                if(p < 1 || p > 2) throw "Pilihan search tidak valid";
-
-                if(p == 1){
-                    sortingID(baju, jumlah);
-                    string id;
-                    cout << "Masukkan ID: ";
-                    cin >> id;
-
-                    int idx = binarySearch(baju, jumlah, id);
-
-                    if(idx != -1)
-                        cout << "Data ditemukan: " << baju[idx].nama_baju << endl;
-                    else
-                        cout << "Data tidak ditemukan" << endl;
-                }
-                else{
-                    string nama;
-                    cout << "Masukkan Nama: ";
-                    cin >> nama;
-
-                    int idx = sequentialSearch(baju, jumlah, nama);
-
-                    if(idx != -1)
-                        cout << "Data ditemukan: " << baju[idx].nama_baju << endl;
-                    else
-                        cout << "Data tidak ditemukan" << endl;
-                }
-            }
-            else if(pilih == 4){
-                string id;
-                cout << "Masukkan ID: ";
-                cin >> id;
-                updateData(baju, jumlah, id);
-            }
-            else if(pilih == 5){
-                string id;
-                cout << "Masukkan ID: ";
-                cin >> id;
-                hapusData(baju, &jumlah, id);
-            }
-            else if(pilih == 6){
-                sortingID(baju, jumlah);
             }
             else if(pilih == 7){
                 cout << "Keluar program..." << endl;
